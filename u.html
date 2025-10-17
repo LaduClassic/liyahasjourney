@@ -1,0 +1,1543 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+ 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Arabic Letters Adventure! — Quiz + Prep</title>
+    <style>
+        :root {
+            --bg: #e8f5ff;
+            --card: #fff;
+            --text: #2c3e50;
+            --muted: #7f8c8d;
+            --accent: #ff6b6b;
+            --correct: #4cd137;
+            --wrong: #ff4757;
+        }
+ 
+        * {
+            box-sizing: border-box;
+        }
+ 
+        @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
+ 
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Bubblegum Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            background-image: linear-gradient(45deg, #fff 25%, transparent 25%),
+                linear-gradient(-45deg, #fff 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #fff 75%),
+                linear-gradient(-45deg, transparent 75%, #fff 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-attachment: fixed;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+ 
+        header {
+            padding: 18px 20px 22px;
+            padding-top: calc(18px + constant(safe-area-inset-top));
+            padding-top: calc(18px + env(safe-area-inset-top));
+            background: #fff;
+            border-bottom: 3px solid #ffeaa7;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+ 
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #e17055;
+            text-shadow: 2px 2px 0 #ffeaa7;
+            text-align: center;
+        }
+ 
+        main {
+            margin-top: 160px;
+            margin-top: calc(160px + constant(safe-area-inset-top));
+            margin-top: calc(160px + env(safe-area-inset-top));
+            padding: 24px 16px 80px;
+            display: flex;
+            justify-content: center;
+        }
+ 
+        .quiz-shell {
+            width: 100%;
+            max-width: 860px;
+        }
+ 
+        .card {
+            background: var(--card);
+            border: none;
+            border-radius: 28px;
+            padding: 32px 28px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+ 
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 28px 55px rgba(0, 0, 0, 0.18);
+        }
+ 
+        .quiz-card {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+ 
+        .quiz-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+ 
+        .quiz-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #6c5ce7;
+            background: rgba(108, 92, 231, 0.12);
+            padding: 8px 14px;
+            border-radius: 999px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-align: center;
+        }
+ 
+        #quiz {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+ 
+        .arabic {
+            font-family: 'Scheherazade New', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Geeza Pro', 'Arial', sans-serif;
+            font-size: 100px;
+            line-height: 1.2;
+            text-align: center;
+            direction: rtl;
+            color: #2d3436;
+            text-shadow: 2px 2px 0 #dfe6e9;
+        }
+ 
+        .hint {
+            color: var(--muted);
+            font-size: 18px;
+            text-align: center;
+            margin: 15px 0;
+            color: #6c5ce7;
+        }
+ 
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+ 
+        .quiz-card .grid button {
+            font: inherit;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 3px solid #a8e6cf;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            color: #2d3436;
+        }
+ 
+        .quiz-card .grid button:hover {
+            border-color: #3fc1c9;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .quiz-card .grid button.correct {
+            background: #a8e6cf;
+            border-color: #55efc4;
+            animation: correct 0.5s ease;
+        }
+ 
+        .quiz-card .grid button.wrong {
+            background: #ffb8b8;
+            border-color: #ff7675;
+            animation: wrong 0.5s ease;
+        }
+ 
+        button.help-btn {
+            border: none;
+            background: linear-gradient(135deg, #ff6b6b, #ffd56f);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-weight: 600;
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.25);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+ 
+        button.help-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 36px rgba(255, 107, 107, 0.25);
+        }
+ 
+        .quiz-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+ 
+        .next-btn {
+            border: none;
+            background: linear-gradient(135deg, #38bdf8, #6366f1);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 18px 32px -18px rgba(59, 130, 246, 0.7);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+ 
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 24px 36px -18px rgba(59, 130, 246, 0.75);
+        }
+ 
+        .next-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.35);
+        }
+ 
+        @keyframes correct {
+            0% {
+                transform: scale(1);
+            }
+ 
+            50% {
+                transform: scale(1.1);
+            }
+ 
+            100% {
+                transform: scale(1);
+            }
+        }
+ 
+        @keyframes wrong {
+            0% {
+                transform: translateX(0);
+            }
+ 
+            25% {
+                transform: translateX(-10px);
+            }
+ 
+            75% {
+                transform: translateX(10px);
+            }
+ 
+            100% {
+                transform: translateX(0);
+            }
+        }
+ 
+        .mode-toggle {
+            display: inline-flex;
+            align-items: stretch;
+            gap: 8px;
+            padding: 6px;
+            background: rgba(236, 244, 255, 0.85);
+            border-radius: 999px;
+            box-shadow: inset 0 0 0 1px rgba(108, 92, 231, 0.18);
+        }
+ 
+        .mode-btn {
+            border: none;
+            background: transparent;
+            color: #6c5ce7;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+ 
+        .mode-btn:hover {
+            background: rgba(108, 92, 231, 0.12);
+        }
+ 
+        .mode-btn.active {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: #fff;
+            box-shadow: 0 12px 24px -12px rgba(108, 92, 231, 0.5);
+        }
+ 
+        .mode-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.3);
+        }
+ 
+        .difficulty-toggle {
+            display: inline-flex;
+            align-items: stretch;
+            gap: 8px;
+            padding: 6px;
+            background: rgba(255, 239, 214, 0.9);
+            border-radius: 999px;
+            box-shadow: inset 0 0 0 1px rgba(225, 112, 85, 0.25);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+ 
+        .difficulty-btn {
+            border: none;
+            background: transparent;
+            color: #e17055;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+ 
+        .difficulty-btn:hover {
+            background: rgba(225, 112, 85, 0.12);
+        }
+ 
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #ff6b6b, #ffd56f);
+            color: #fff;
+            box-shadow: 0 12px 24px -12px rgba(255, 139, 97, 0.5);
+        }
+ 
+        .difficulty-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 139, 97, 0.35);
+        }
+ 
+        .score {
+            font-weight: 700;
+            font-size: 18px;
+            background: #f8fafc;
+            padding: 10px 18px;
+            border-radius: 999px;
+            box-shadow: 0 12px 24px -18px rgba(15, 23, 42, 0.55);
+            color: #1e293b;
+        }
+ 
+        .status-board {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+ 
+        .status-item {
+            background: #f8fafc;
+            border-radius: 18px;
+            padding: 14px 16px;
+            box-shadow: 0 12px 34px -22px rgba(15, 23, 42, 0.7);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+ 
+        .status-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #64748b;
+        }
+ 
+        .status-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+ 
+        .status-value.note {
+            font-size: 16px;
+            font-weight: 600;
+            color: #475569;
+        }
+ 
+        .struggle-card {
+            margin-top: 24px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: inset 0 0 0 2px rgba(108, 92, 231, 0.08), 0 18px 36px -24px rgba(15, 23, 42, 0.65);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+ 
+        .struggle-card h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #6c5ce7;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+ 
+        .struggle-empty {
+            margin: 0;
+            color: #64748b;
+            font-size: 15px;
+        }
+ 
+        .struggle-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+ 
+        .struggle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(108, 92, 231, 0.08);
+            border-radius: 16px;
+            padding: 10px 14px;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+ 
+        .struggle-letter {
+            font-family: 'Scheherazade New', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Geeza Pro', 'Arial', sans-serif;
+            font-size: 34px;
+            margin-right: 12px;
+            color: #2d3436;
+        }
+ 
+        .struggle-name {
+            flex: 1;
+            font-weight: 600;
+        }
+ 
+        .struggle-count {
+            font-size: 14px;
+            color: #6366f1;
+            font-weight: 600;
+        }
+ 
+        .name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 6px;
+            text-align: center;
+        }
+ 
+        .forms {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            direction: rtl;
+        }
+ 
+        .box {
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+ 
+        .small {
+            font-size: 44px;
+        }
+ 
+        .muted {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 4px;
+            text-align: center;
+        }
+ 
+        .reference-panel {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            z-index: 1000;
+        }
+ 
+        .reference-panel.active {
+            pointer-events: auto;
+            opacity: 1;
+        }
+ 
+        .ref-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(4px);
+        }
+ 
+        .ref-card {
+            position: relative;
+            background: #111827;
+            color: #f9fafb;
+            width: min(92vw, 900px);
+            border-radius: 28px;
+            padding: 48px 64px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
+        }
+ 
+        .ref-card:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25), 0 40px 90px rgba(0, 0, 0, 0.45);
+        }
+ 
+        .ref-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #f9fafb;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            font-size: 26px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+ 
+        .ref-close:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+ 
+        .ref-slider {
+            position: relative;
+            width: 100%;
+            padding: 0 64px;
+        }
+ 
+        .ref-slide {
+            background: #0f172a;
+            border-radius: 20px;
+            padding: 32px 48px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            align-items: center;
+            text-align: center;
+        }
+ 
+        .ref-letter-name {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+ 
+        .ref-heading {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+        }
+ 
+        .ref-forms {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            width: 100%;
+        }
+ 
+        .ref-forms-row {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+        }
+ 
+        .ref-forms-row .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.72);
+        }
+ 
+        .ref-forms-row .glyph {
+            font-size: 64px;
+            line-height: 1;
+            font-family: 'Scheherazade New', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Geeza Pro', 'Arial', sans-serif;
+            color: #fdfdfd;
+            text-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+        }
+ 
+        .ref-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: #f9fafb;
+            font-size: 32px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+            z-index: 2;
+        }
+ 
+        .ref-nav.prev {
+            left: 16px;
+        }
+ 
+        .ref-nav.next {
+            right: 16px;
+        }
+ 
+        .ref-nav:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-50%) scale(1.05);
+        }
+ 
+        .ref-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+ 
+        .ref-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+ 
+        .ref-dot.active {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+ 
+        .ref-nav:focus-visible,
+        .ref-close:focus-visible,
+        button.help-btn:focus-visible,
+        .ref-dot:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+        }
+ 
+        .ref-tip {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.68);
+            text-align: center;
+            line-height: 1.5;
+        }
+ 
+        .ref-tip code {
+            color: #fde68a;
+        }
+ 
+        body.no-scroll {
+            overflow: hidden;
+        }
+ 
+        @media (max-width: 960px) {
+            .quiz-shell {
+                max-width: 720px;
+            }
+ 
+            .ref-card {
+                width: min(94vw, 760px);
+            }
+        }
+ 
+        @media (max-width: 720px) {
+            header {
+                padding: 12px 16px;
+                padding-top: calc(12px + constant(safe-area-inset-top));
+                padding-top: calc(12px + env(safe-area-inset-top));
+            }
+ 
+            h1 {
+                font-size: 20px;
+            }
+ 
+            main {
+                padding: 16px 12px 60px;
+                margin-top: 140px;
+                margin-top: calc(140px + constant(safe-area-inset-top));
+                margin-top: calc(140px + env(safe-area-inset-top));
+            }
+ 
+            .card {
+                padding: 24px 20px;
+                border-radius: 24px;
+            }
+ 
+            .quiz-head {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+ 
+            .quiz-tag {
+                width: fit-content;
+                align-self: center;
+            }
+ 
+            button.help-btn {
+                width: 100%;
+                justify-content: center;
+            }
+ 
+            .mode-toggle {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+ 
+            .difficulty-toggle {
+                width: 100%;
+            }
+ 
+            .difficulty-btn {
+                flex: 1 1 120px;
+            }
+ 
+            .mode-btn {
+                flex: 1 1 140px;
+            }
+ 
+            .arabic {
+                font-size: 72px;
+            }
+ 
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                max-width: 100%;
+            }
+ 
+            .quiz-card .grid button {
+                width: 100%;
+            }
+ 
+            .ref-card {
+                padding: 32px 24px;
+                border-radius: 24px;
+                width: min(95vw, 540px);
+            }
+ 
+            .ref-slide {
+                padding: 24px 20px;
+            }
+ 
+            .ref-slider {
+                padding: 0 36px;
+            }
+ 
+            .ref-nav {
+                width: 48px;
+                height: 48px;
+                font-size: 26px;
+            }
+ 
+            .ref-forms {
+                grid-template-columns: 1fr;
+            }
+ 
+            .status-board {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+        /* Prep buttons inherit quiz styles; add slight variant */
+        .prep-btn { border: 3px solid #ffd3b6; }
+        .prep-btn:hover { border-color: #ff8b94; transform: scale(1.05); }
+
+</style>
+</head>
+ 
+<body>
+    <header>
+        <h1>Arabic Letters Adventure! 🌟</h1>
+        <div class="mode-toggle" role="group" aria-label="Select game mode">
+            <button type="button" class="mode-btn active" data-mode="form-to-name" aria-pressed="true">Form → Name</button>
+            <button type="button" class="mode-btn" data-mode="name-to-form" aria-pressed="false">Name → Form</button>
+        </div>
+        <div class="difficulty-toggle" role="group" aria-label="Select difficulty level">
+            <button type="button" class="difficulty-btn" data-difficulty="easy" aria-pressed="false">Easy</button>
+            <button type="button" class="difficulty-btn" data-difficulty="medium" aria-pressed="false">Medium</button>
+            <button type="button" class="difficulty-btn" data-difficulty="hard" aria-pressed="false">Hard</button>
+        </div>
+    </header>
+    <main>
+        <div class="quiz-shell">
+            <section class="card quiz-card">
+                <div class="quiz-head">
+                    <span class="quiz-tag">Question</span>
+                    <button type="button" id="help" class="help-btn" aria-haspopup="dialog" aria-controls="reference-panel">Help</button>
+                </div>
+                <div id="quiz"></div>
+                <div class="quiz-actions">
+                    <button id="next" type="button" class="next-btn">Next <span aria-hidden="true">▶</span></button>
+                </div>
+                <div class="status-board" aria-live="polite">
+                    <div class="status-item">
+                        <span class="status-label">Score Saved</span>
+                        <span class="status-value score" id="score">0 / 0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Difficulty</span>
+                        <span class="status-value" id="difficulty-label">Easy</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Reference</span>
+                        <span class="status-value note" id="reference-status">Always open</span>
+                    </div>
+                </div>
+                <div class="struggle-card" aria-live="polite">
+                    <h2>Letters to practice</h2>
+                    <p class="struggle-empty" id="struggle-empty">You're doing great! No tricky letters yet.</p>
+                    <ul class="struggle-list" id="struggle-list"></ul>
+                </div>
+            
+                <section class="card quiz-card" id="prep-card" aria-labelledby="prep-title">
+                    <div class="quiz-head">
+                        <span class="quiz-tag" id="prep-title">Quiz Prep</span>
+                    </div>
+                    <div class="grid" id="prep-grid">
+                        <button type="button" class="prep-btn" data-prep="order">Letter Order</button>
+                        <button type="button" class="prep-btn" data-prep="phonetic">Phonetic Match</button>
+                        <button type="button" class="prep-btn" data-prep="type">Type It</button>
+                        <button type="button" class="prep-btn" data-prep="flashcards">Flashcards</button>
+                    </div>
+                    <p class="muted" style="text-align:center;margin-top:10px;">
+                        Tip: forms are generated using Arabic shaping with the tatweel “ـ” to force joins.
+                        Beginning: <code>letter + ـ</code>, Middle: <code>ـ + letter + ـ</code>, Final: <code>ـ + letter</code>.
+                    </p>
+                </section>
+
+        </div>
+    </main>
+ 
+    <div id="reference-panel" class="reference-panel" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="ref-heading">
+        <div class="ref-backdrop"></div>
+        <div class="ref-card" tabindex="-1">
+            <button type="button" class="ref-close" aria-label="Close reference panel">×</button>
+            <div class="ref-heading" id="ref-heading">Letter Reference</div>
+            <div class="ref-slider">
+                <div class="ref-slide">
+                    <div class="ref-letter-name"></div>
+                    <div class="ref-forms"></div>
+                </div>
+                <button type="button" class="ref-nav prev" aria-label="Previous letter">‹</button>
+                <button type="button" class="ref-nav next" aria-label="Next letter">›</button>
+            </div>
+            <div class="ref-dots"></div>
+            <div class="ref-tip">
+                Beginning means the letter starts the word, middle is in the middle, and final is the ending friend.
+                The long line “ـ” is the hand that lets letters hold on to each other!
+            </div>
+        </div>
+    </div>
+ 
+    <script>
+        const STORAGE_KEY = 'arabic-letters-adventure-progress';
+ 
+        function createDefaultProgress() {
+            return {
+                mode: 'form-to-name',
+                difficulty: 'easy',
+                scores: {
+                    easy: {
+                        correct: 0,
+                        total: 0
+                    },
+                    medium: {
+                        correct: 0,
+                        total: 0
+                    },
+                    hard: {
+                        correct: 0,
+                        total: 0
+                    }
+                },
+                struggles: {},
+                reference: {
+                    medium: {
+                        remaining: 5,
+                        bonusGranted: 0
+                    }
+                }
+            };
+        }
+ 
+        function loadProgress() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return createDefaultProgress();
+                const parsed = JSON.parse(raw);
+                const defaults = createDefaultProgress();
+                const merged = {
+                    ...defaults,
+                    ...parsed,
+                    scores: {
+                        ...defaults.scores,
+                        ...(parsed.scores || {})
+                    },
+                    struggles: parsed.struggles || {},
+                    reference: {
+                        ...defaults.reference,
+                        ...(parsed.reference || {})
+                    }
+                };
+                ['easy', 'medium', 'hard'].forEach(level => {
+                    const entry = merged.scores[level] || (merged.scores[level] = {
+                        correct: 0,
+                        total: 0
+                    });
+                    entry.correct = entry.correct ?? 0;
+                    entry.total = entry.total ?? 0;
+                });
+                if (!merged.reference.medium) {
+                    merged.reference.medium = {
+                        remaining: 5,
+                        bonusGranted: 0
+                    };
+                } else {
+                    merged.reference.medium.remaining = Math.max(0, merged.reference.medium.remaining ?? 5);
+                    merged.reference.medium.bonusGranted = merged.reference.medium.bonusGranted ?? 0;
+                }
+                return merged;
+            } catch (error) {
+                console.warn('Failed to load progress', error);
+                return createDefaultProgress();
+            }
+        }
+ 
+        function saveProgress() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+            } catch (error) {
+                console.warn('Unable to save progress', error);
+            }
+        }
+ 
+        function ensureMediumReferenceState() {
+            if (!progress.reference.medium) {
+                progress.reference.medium = {
+                    remaining: 5,
+                    bonusGranted: 0
+                };
+            } else {
+                progress.reference.medium.remaining = Math.max(0, progress.reference.medium.remaining ?? 5);
+                progress.reference.medium.bonusGranted = progress.reference.medium.bonusGranted ?? 0;
+            }
+            return progress.reference.medium;
+        }
+ 
+        let DATA = [];
+        let progress = loadProgress();
+        ensureMediumReferenceState();
+        let refIndex = 0;
+        let currentMode = progress.mode || 'form-to-name';
+        let currentDifficulty = progress.difficulty || 'easy';
+        let currentQuestion = null;
+ 
+        async function load() {
+            const resp = await fetch('letters.json');
+            DATA = await resp.json();
+            initReference();
+            updateStruggleBoard();
+            newRound();
+        }
+ 
+        function updateModeButtons() {
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                const isActive = btn.dataset.mode === currentMode;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+        }
+ 
+        function initModeToggle() {
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (btn.dataset.mode === currentMode) return;
+                    currentMode = btn.dataset.mode;
+                    progress.mode = currentMode;
+                    saveProgress();
+                    updateModeButtons();
+                    newRound();
+                });
+            });
+            updateModeButtons();
+        }
+ 
+        function updateDifficultyButtons() {
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                const isActive = btn.dataset.difficulty === currentDifficulty;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+        }
+ 
+        function updateDifficultyLabel() {
+            const label = document.getElementById('difficulty-label');
+            if (!label) return;
+            const names = {
+                easy: 'Easy',
+                medium: 'Medium',
+                hard: 'Hard'
+            };
+            label.textContent = names[currentDifficulty] || currentDifficulty;
+        }
+ 
+        function initDifficultyToggle() {
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const diff = btn.dataset.difficulty;
+                    if (diff === currentDifficulty) return;
+                    currentDifficulty = diff;
+                    progress.difficulty = currentDifficulty;
+                    ensureMediumReferenceState();
+                    saveProgress();
+                    updateDifficultyButtons();
+                    updateDifficultyLabel();
+                    newRound();
+                });
+            });
+            updateDifficultyButtons();
+            updateDifficultyLabel();
+        }
+ 
+        function pick(n, excludeIdx = null) {
+            const pool = DATA.map((_, i) => i).filter(i => i !== excludeIdx);
+            const out = [];
+            while (out.length < n && pool.length) {
+                const j = Math.floor(Math.random() * pool.length);
+                out.push(pool.splice(j, 1)[0]);
+            }
+            return out;
+        }
+ 
+        function sample(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+ 
+        function getScoreData(level = currentDifficulty) {
+            const store = progress.scores[level] || (progress.scores[level] = {
+                correct: 0,
+                total: 0
+            });
+            store.correct = store.correct ?? 0;
+            store.total = store.total ?? 0;
+            return store;
+        }
+ 
+        function updateScoreDisplay() {
+            const scoreData = getScoreData();
+            const target = document.getElementById('score');
+            if (target) {
+                target.textContent = `${scoreData.correct} / ${scoreData.total}`;
+            }
+        }
+ 
+        function updateReferenceStatus() {
+            const status = document.getElementById('reference-status');
+            const helpButton = document.getElementById('help');
+            const closeButton = document.querySelector('.ref-close');
+            if (!status || !helpButton || !closeButton) return;
+ 
+            if (currentDifficulty === 'easy') {
+                status.textContent = 'Always open';
+                helpButton.textContent = 'Reference open';
+                helpButton.disabled = true;
+                helpButton.setAttribute('aria-disabled', 'true');
+                helpButton.title = 'The helper card stays open in easy mode.';
+                closeButton.disabled = true;
+                closeButton.setAttribute('aria-hidden', 'true');
+            } else if (currentDifficulty === 'medium') {
+                const refState = ensureMediumReferenceState();
+                const remaining = refState.remaining;
+                if (remaining > 0) {
+                    status.textContent = `${remaining} peek${remaining === 1 ? '' : 's'} left`;
+                } else {
+                    status.textContent = 'No peeks left — get 5 right to earn one!';
+                }
+                helpButton.disabled = false;
+                helpButton.removeAttribute('aria-disabled');
+                helpButton.title = 'Use a peek at the helper card.';
+                helpButton.textContent = remaining > 0 ? `Reference (${remaining} left)` : 'Reference (earn more!)';
+                closeButton.disabled = false;
+                closeButton.removeAttribute('aria-hidden');
+            } else {
+                status.textContent = 'Locked in hard mode';
+                helpButton.textContent = 'Reference locked 🔒';
+                helpButton.disabled = true;
+                helpButton.setAttribute('aria-disabled', 'true');
+                helpButton.title = 'The helper card stays closed in hard mode.';
+                closeButton.disabled = false;
+                closeButton.removeAttribute('aria-hidden');
+            }
+        }
+ 
+        function updateStruggleBoard() {
+            const list = document.getElementById('struggle-list');
+            const empty = document.getElementById('struggle-empty');
+            if (!list || !empty) return;
+ 
+            list.innerHTML = '';
+            const entries = Object.entries(progress.struggles || {}).filter(([, info]) => info && info.count > 0);
+            if (!entries.length) {
+                empty.style.display = 'block';
+                return;
+            }
+ 
+            empty.style.display = 'none';
+            entries.sort((a, b) => b[1].count - a[1].count);
+            entries.slice(0, 5).forEach(([base, info]) => {
+                const letterData = DATA.find(item => item.base === base) || null;
+                const glyph = letterData ? (letterData.forms?.letter || letterData.base || base) : base;
+                const name = info.name || (letterData ? letterData.name : base);
+                const li = document.createElement('li');
+                li.className = 'struggle-item';
+                li.innerHTML = `
+      <span class="struggle-letter">${glyph}</span>
+      <span class="struggle-name">${name}</span>
+      <span class="struggle-count">${info.count} miss${info.count === 1 ? '' : 'es'}</span>
+    `;
+                list.appendChild(li);
+            });
+        }
+ 
+        function recordStruggle(letterIdx) {
+            const letter = DATA[letterIdx];
+            if (!letter) return;
+            const key = letter.base || letter.forms?.letter || letter.name;
+            if (!progress.struggles[key]) {
+                progress.struggles[key] = {
+                    count: 0,
+                    name: letter.name
+                };
+            }
+            progress.struggles[key].count += 1;
+        }
+ 
+        function handleMediumReferenceReward(wasCorrect) {
+            if (currentDifficulty !== 'medium' || !wasCorrect) return;
+            const refState = ensureMediumReferenceState();
+            const scoreData = getScoreData('medium');
+            const earnedBonus = Math.floor(scoreData.correct / 5);
+            if (earnedBonus > refState.bonusGranted) {
+                const extra = earnedBonus - refState.bonusGranted;
+                refState.bonusGranted = earnedBonus;
+                refState.remaining += extra;
+                showMessage('Bonus peek unlocked! 🔍', 'correct');
+            }
+        }
+ 
+        function applyDifficultyRules(options = {}) {
+            updateReferenceStatus();
+            if (currentDifficulty === 'easy') {
+                toggleReference(true, {
+                    force: true,
+                    skipFocus: true
+                });
+            } else {
+                toggleReference(false, {
+                    force: true,
+                    skipFocus: true
+                });
+            }
+        }
+ 
+        function newRound() {
+            if (!DATA.length) return;
+            currentQuestion = null;
+            updateScoreDisplay();
+ 
+            const container = document.getElementById('quiz');
+            container.innerHTML = '';
+ 
+            const idx = Math.floor(Math.random() * DATA.length);
+            const letter = DATA[idx];
+            const forms = ['beginning', 'middle', 'final'];
+            const shownForm = sample(forms);
+ 
+            if (currentMode === 'form-to-name') {
+                const prompt = document.createElement('div');
+                prompt.className = 'arabic';
+                prompt.textContent = letter.forms[shownForm];
+                container.appendChild(prompt);
+ 
+                const hint = document.createElement('div');
+                hint.className = 'hint';
+                hint.textContent = `Which letter is this ${shownForm} form?`;
+                container.appendChild(hint);
+ 
+                const options = [idx, ...pick(3, idx)];
+                options.sort(() => Math.random() - 0.5);
+                const grid = document.createElement('div');
+                grid.className = 'grid';
+                options.forEach(optionIdx => {
+                    const b = document.createElement('button');
+                    b.textContent = DATA[optionIdx].name;
+                    b.onclick = () => grade(b, optionIdx === idx);
+                    grid.appendChild(b);
+                });
+                container.appendChild(grid);
+                currentQuestion = {
+                    answerIdx: idx,
+                    form: shownForm,
+                    answered: false
+                };
+            } else {
+                const title = document.createElement('div');
+                title.className = 'name';
+                title.textContent = letter.name;
+                container.appendChild(title);
+ 
+                const hint = document.createElement('div');
+                hint.className = 'hint';
+                hint.textContent = 'Pick the requested form:';
+                container.appendChild(hint);
+ 
+                const ask = sample(forms);
+                const askEl = document.createElement('div');
+                askEl.className = 'muted';
+                askEl.textContent = `Find the ${ask} form`;
+                container.appendChild(askEl);
+ 
+                const shown = [ask, ...forms.filter(f => f !== ask)];
+                shown.sort(() => Math.random() - 0.5);
+ 
+                const grid = document.createElement('div');
+                grid.className = 'grid';
+                shown.forEach(kind => {
+                    const b = document.createElement('button');
+                    b.innerHTML = `<div class="arabic small">${letter.forms[kind]}</div><div class="muted">${kind}</div>`;
+                    b.onclick = () => grade(b, kind === ask);
+                    grid.appendChild(b);
+                });
+                container.appendChild(grid);
+                currentQuestion = {
+                    answerIdx: idx,
+                    form: ask,
+                    answered: false
+                };
+            }
+ 
+            container.dataset.answerIdx = idx;
+            container.dataset.which = shownForm;
+            refIndex = idx;
+            updateReferenceSlide();
+            applyDifficultyRules({
+                fromNewRound: true
+            });
+        }
+ 
+        function grade(button, isCorrect) {
+            if (!currentQuestion || currentQuestion.answered) return;
+            currentQuestion.answered = true;
+ 
+            const parent = button.parentElement;
+            if (parent) {
+                parent.querySelectorAll('button').forEach(b => {
+                    b.disabled = true;
+                });
+            }
+ 
+            const messages = {
+                correct: [
+                    'Amazing! 🌟',
+                    'Great job! 🎉',
+                    "You're a star! ⭐",
+                    'Fantastic! 🎈',
+                    'Keep it up! 🚀'
+                ],
+                wrong: [
+                    'Try again! 💪',
+                    'You can do it! 🌈',
+                    'Keep learning! 📚',
+                    "Don't give up! 🌟",
+                    'Almost there! 🎯'
+                ]
+            };
+ 
+            if (isCorrect) {
+                button.classList.add('correct');
+                showMessage(messages.correct[Math.floor(Math.random() * messages.correct.length)], 'correct');
+            } else {
+                button.classList.add('wrong');
+                showMessage(messages.wrong[Math.floor(Math.random() * messages.wrong.length)], 'wrong');
+            }
+ 
+            const scoreData = getScoreData();
+            scoreData.total += 1;
+            if (isCorrect) {
+                scoreData.correct += 1;
+            } else {
+                recordStruggle(currentQuestion.answerIdx);
+            }
+            handleMediumReferenceReward(isCorrect);
+            saveProgress();
+            updateScoreDisplay();
+            updateReferenceStatus();
+            updateStruggleBoard();
+        }
+ 
+        function showMessage(text, type) {
+            const msg = document.createElement('div');
+            msg.className = `message ${type}`;
+            msg.textContent = text;
+            msg.style.position = 'fixed';
+            msg.style.top = '50%';
+            msg.style.left = '50%';
+            msg.style.transform = 'translate(-50%, -50%)';
+            msg.style.backgroundColor = type === 'correct' ? '#a8e6cf' : '#ffb8b8';
+            msg.style.padding = '20px 40px';
+            msg.style.borderRadius = '20px';
+            msg.style.fontSize = '24px';
+            msg.style.fontWeight = 'bold';
+            msg.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+            msg.style.zIndex = '1000';
+            msg.style.opacity = '0';
+            msg.style.transition = 'opacity 0.3s ease';
+ 
+            document.body.appendChild(msg);
+            setTimeout(() => (msg.style.opacity = '1'), 10);
+            setTimeout(() => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            }, 1500);
+        }
+ 
+        function initReference() {
+            const panel = document.getElementById('reference-panel');
+            const dotsWrap = panel.querySelector('.ref-dots');
+            dotsWrap.innerHTML = '';
+            refIndex = 0;
+ 
+            DATA.forEach((_, idx) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = 'ref-dot';
+                dot.dataset.index = idx;
+                dot.addEventListener('click', () => {
+                    refIndex = idx;
+                    updateReferenceSlide();
+                });
+                dotsWrap.appendChild(dot);
+            });
+ 
+            panel.querySelector('.ref-nav.prev').addEventListener('click', () => shiftReference(-1));
+            panel.querySelector('.ref-nav.next').addEventListener('click', () => shiftReference(1));
+            panel.querySelector('.ref-close').addEventListener('click', () => {
+                if (currentDifficulty !== 'easy') toggleReference(false);
+            });
+            panel.querySelector('.ref-backdrop').addEventListener('click', () => {
+                if (currentDifficulty !== 'easy') toggleReference(false);
+            });
+ 
+            const helpButton = document.getElementById('help');
+            helpButton.addEventListener('click', requestReference);
+ 
+            document.addEventListener('keydown', event => {
+                if (!panel.classList.contains('active')) return;
+                if (event.key === 'Escape') {
+                    if (currentDifficulty !== 'easy') toggleReference(false);
+                } else if (event.key === 'ArrowRight') {
+                    shiftReference(1);
+                } else if (event.key === 'ArrowLeft') {
+                    shiftReference(-1);
+                }
+            });
+ 
+            updateReferenceSlide();
+            updateReferenceStatus();
+        }
+ 
+        function shiftReference(delta) {
+            if (!DATA.length) return;
+            refIndex = (refIndex + delta + DATA.length) % DATA.length;
+            updateReferenceSlide();
+        }
+ 
+        function updateReferenceSlide() {
+            if (!DATA.length) return;
+            const panel = document.getElementById('reference-panel');
+            const letter = DATA[refIndex];
+            const formsRoot = panel.querySelector('.ref-forms');
+            panel.querySelector('.ref-letter-name').textContent = letter.name;
+            formsRoot.innerHTML = '';
+ 
+            const order = [
+                ['beginning', 'Beginning'],
+                ['middle', 'Middle'],
+                ['final', 'Final']
+            ];
+ 
+            order.forEach(([key, label]) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'ref-forms-row';
+                wrapper.innerHTML = `
+      <span class="label">${label}</span>
+      <span class="glyph">${letter.forms[key]}</span>
+    `;
+                formsRoot.appendChild(wrapper);
+            });
+ 
+            panel.querySelectorAll('.ref-dot').forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === refIndex);
+            });
+        }
+ 
+        function toggleReference(show, options = {}) {
+            const panel = document.getElementById('reference-panel');
+            if (!panel) return;
+            const {
+                force = false, skipFocus = false
+            } = options;
+            if (!force) {
+                if (currentDifficulty === 'hard' && show) return;
+                if (currentDifficulty === 'easy') show = true;
+            }
+ 
+            const isActive = panel.classList.contains('active');
+            if (show === isActive) return;
+ 
+            panel.classList.toggle('active', show);
+            panel.setAttribute('aria-hidden', show ? 'false' : 'true');
+            document.body.classList.toggle('no-scroll', show);
+            if (show && !skipFocus) {
+                panel.querySelector('.ref-card').focus();
+            } else if (!show && !skipFocus) {
+                const help = document.getElementById('help');
+                if (help && !help.disabled) {
+                    help.focus();
+                }
+            }
+        }
+ 
+        function requestReference() {
+            const panel = document.getElementById('reference-panel');
+            if (currentDifficulty === 'easy') {
+                toggleReference(true);
+                return;
+            }
+ 
+            if (panel.classList.contains('active')) {
+                toggleReference(false);
+                return;
+            }
+ 
+            if (currentDifficulty === 'hard') {
+                showMessage('Hard mode keeps the helper card locked. Keep practicing!', 'wrong');
+                return;
+            }
+ 
+            const refState = ensureMediumReferenceState();
+            if (refState.remaining <= 0) {
+                showMessage('Earn another peek by getting 5 answers correct!', 'wrong');
+                return;
+            }
+ 
+            refState.remaining -= 1;
+            saveProgress();
+            updateReferenceStatus();
+            toggleReference(true);
+        }
+ 
+        document.getElementById('next').onclick = () => {
+            newRound();
+        };
+ 
+        initModeToggle();
+        initDifficultyToggle();
+        load();
+    
+        // --- Prep modes (placeholders to be fleshed out) ---
+        function initPrep() {
+            const root = document.getElementById('prep-grid');
+            if (!root) return;
+            root.querySelectorAll('.prep-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const mode = btn.dataset.prep;
+                    if (mode === 'flashcards') {
+                        // Open reference panel as a simple flashcard viewer
+                        toggleReference(true);
+                        showMessage('Flashcards opened — use ◀/▶ to browse.', 'correct');
+                    } else if (mode === 'order') {
+                        showMessage('Letter Order practice: coming next — try arranging letters alphabetically.', 'wrong');
+                    } else if (mode === 'phonetic') {
+                        showMessage('Phonetic Match: coming next — map sounds to letters.', 'wrong');
+                    } else if (mode === 'type') {
+                        showMessage('Type It: coming next — type the shown form.', 'wrong');
+                    }
+                });
+            });
+        }
+
+        initPrep();
+    </script>
+</body>
+ 
+</html>
