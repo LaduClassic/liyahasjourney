@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, beginning-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Arabic Letters Adventure! 🌟</title>
   <style>
     :root { 
@@ -32,7 +32,7 @@
       overflow-y: auto;
       overflow-x: hidden;
     }
-    header { 
+header { 
       padding: 18px 20px 22px; 
       background: #fff; 
       border-bottom: 3px solid #ffeaa7; 
@@ -48,12 +48,19 @@
       align-items: center;
       gap: 12px;
     }
-    h1 { 
-      margin: 0; 
-      font-size: 24px;
+    .header-bar {
+      width: min(100%, 960px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: clamp(12px, 4vw, 24px);
+    }
+    .header-bar h1 {
+      margin: 0;
+      font-size: clamp(20px, 5vw, 30px);
       color: #e17055;
       text-shadow: 2px 2px 0 #ffeaa7;
-      text-align: center;
+      text-align: left;
     }
     main { 
       margin-top: 160px; 
@@ -62,39 +69,56 @@
       justify-content: center;
     }
     .quiz-shell {
-      width: 100%;
-      max-width: 860px;
+      width: min(100%, 960px);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(20px, 3vw, 40px);
     }
-    .card { 
-      background: var(--card); 
-      border: none; 
-      border-radius: 28px; 
-      padding: 32px 28px; 
+    .quiz-shell.prep-active {
+      width: min(100%, 1040px);
+    }
+    .card {
+      background: var(--card);
+      border: none;
+      border-radius: 24px;
+      padding: clamp(24px, 4vw, 44px);
       box-shadow: 0 20px 45px rgba(0,0,0,0.12);
       transform: translateY(0);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       position: relative;
     }
     .card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-4px);
       box-shadow: 0 28px 55px rgba(0,0,0,0.18);
     }
     .quiz-card {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: clamp(14px, 2.6vw, 24px);
     }
     .quiz-head {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: clamp(12px, 2vw, 20px);
+    }
+    .quiz-head .quiz-tag,
+    .quiz-head .help-btn {
+      flex-shrink: 0;
+    }
+    .quiz-head .mode-strip {
+      flex: 1 1 280px;
+      display: flex;
+      justify-content: center;
+      margin: 0;
     }
     .quiz-tag {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 16px;
+      font-size: clamp(13px, 1.8vw, 15px);
       font-weight: 600;
       color: #6c5ce7;
       background: rgba(108,92,231,0.12);
@@ -103,59 +127,64 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
+    .mode-strip {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      min-width: clamp(220px, 42%, 320px);
+    }
     #quiz {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      align-items: center;
+      gap: clamp(14px, 2.4vw, 22px);
     }
-    .arabic { 
+    .arabic {
       font-family: 'Scheherazade New', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Geeza Pro', 'Arial', sans-serif;
-      font-size: 100px; 
-      line-height: 1.2; 
-      text-align: center; 
+      font-size: clamp(72px, 14vw, 110px);
+      line-height: 1.2;
+      text-align: center;
       direction: rtl;
       color: #2d3436;
       text-shadow: 2px 2px 0 #dfe6e9;
     }
-    .hint { 
-      color: var(--muted); 
-      font-size: 18px; 
-      text-align: center;
-      margin: 15px 0;
+    .hint {
       color: #6c5ce7;
+      font-size: clamp(16px, 2.4vw, 22px);
+      text-align: center;
+      margin: clamp(12px, 2vw, 20px) 0;
     }
-    .grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
-      gap: 15px; 
-      margin-top: 20px; 
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: clamp(12px, 2vw, 20px);
+      margin-top: clamp(16px, 2vw, 24px);
+      width: 100%;
     }
-    .quiz-card .grid button { 
-      font: inherit; 
-      padding: 15px 20px; 
-      border-radius: 15px; 
-      border: 3px solid #a8e6cf; 
-      background: #fff; 
+    .quiz-card .grid button {
+      font: inherit;
+      padding: clamp(12px, 2vw, 18px) clamp(14px, 2.6vw, 22px);
+      border-radius: 18px;
+      border: 3px solid #a8e6cf;
+      background: #fff;
       cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 18px;
+      transition: all 0.25s ease;
+      font-size: clamp(16px, 2vw, 19px);
       color: #2d3436;
     }
-    .quiz-card .grid button:hover { 
+    .quiz-card .grid button:hover {
       border-color: #3fc1c9;
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
     }
-    .quiz-card .grid button.correct { 
-      background: #a8e6cf; 
+    .quiz-card .grid button.correct {
+      background: #a8e6cf;
       border-color: #55efc4;
       animation: correct 0.5s ease;
     }
-    .quiz-card .grid button.wrong { 
-      background: #ffb8b8; 
+    .quiz-card .grid button.wrong {
+      background: #ffb8b8;
       border-color: #ff7675;
       animation: wrong 0.5s ease;
     }
@@ -163,10 +192,10 @@
       border: none;
       background: linear-gradient(135deg, #ff6b6b, #ffd56f);
       color: #fff;
-      padding: 10px 20px;
+      padding: clamp(10px, 2vw, 13px) clamp(18px, 3vw, 26px);
       border-radius: 999px;
       font-weight: 600;
-      box-shadow: 0 15px 30px rgba(255,107,107,0.25);
+      box-shadow: 0 12px 24px rgba(255,107,107,0.25);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -174,25 +203,25 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     button.help-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 22px 36px rgba(255,107,107,0.25);
+      transform: translateY(-1px);
+      box-shadow: 0 18px 30px rgba(255,107,107,0.25);
     }
     .quiz-actions {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 18px;
-      margin-top: 12px;
+      gap: clamp(14px, 2.4vw, 22px);
+      margin-top: clamp(10px, 1.5vw, 18px);
       flex-wrap: wrap;
     }
     .next-btn {
       border: none;
       background: linear-gradient(135deg, #38bdf8, #6366f1);
       color: #fff;
-      padding: 12px 24px;
+      padding: clamp(12px, 2.2vw, 16px) clamp(20px, 3.2vw, 32px);
       border-radius: 999px;
       font-weight: 600;
-      font-size: 16px;
+      font-size: clamp(15px, 2vw, 18px);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -201,7 +230,7 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .next-btn:hover {
-      transform: translateY(-2px);
+      transform: translateY(-1px);
       box-shadow: 0 24px 36px -18px rgba(59,130,246,0.75);
     }
     .next-btn:focus-visible {
@@ -210,20 +239,21 @@
     }
     @keyframes correct {
       0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+      50% { transform: scale(1.08); }
       100% { transform: scale(1); }
     }
     @keyframes wrong {
       0% { transform: translateX(0); }
-      25% { transform: translateX(-10px); }
-      75% { transform: translateX(10px); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
       100% { transform: translateX(0); }
     }
     .mode-toggle {
       display: inline-flex;
-      align-items: stretch;
-      gap: 8px;
-      padding: 6px;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(6px, 1.5vw, 12px);
+      padding: clamp(6px, 1.4vw, 10px) clamp(10px, 2vw, 18px);
       background: rgba(236, 244, 255, 0.85);
       border-radius: 999px;
       box-shadow: inset 0 0 0 1px rgba(108,92,231,0.18);
@@ -233,15 +263,14 @@
       background: transparent;
       color: #6c5ce7;
       font-weight: 600;
-      font-size: 15px;
-      padding: 10px 18px;
+      font-size: clamp(13px, 1.8vw, 16px);
+      padding: clamp(7px, 1.2vw, 10px) clamp(14px, 2.2vw, 20px);
       border-radius: 999px;
       cursor: pointer;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
-    .mode-btn:hover {
-      background: rgba(108,92,231,0.12);
-    }
+    .mode-btn:hover { background: rgba(108,92,231,0.12); }
     .mode-btn.active {
       background: linear-gradient(135deg, #6c5ce7, #a29bfe);
       color: #fff;
@@ -251,20 +280,170 @@
       outline: none;
       box-shadow: 0 0 0 3px rgba(108,92,231,0.3);
     }
-    .score { 
-      font-weight: 700; 
-      font-size: 20px;
+    .score {
+      font-weight: 700;
+      font-size: clamp(16px, 2.3vw, 20px);
       background: #f8fafc;
-      padding: 12px 22px;
+      padding: clamp(10px, 2vw, 16px) clamp(16px, 3vw, 24px);
       border-radius: 999px;
       box-shadow: 0 12px 24px -18px rgba(15,23,42,0.55);
       color: #1e293b;
     }
-    .name { font-size: 18px; font-weight: 600; margin-top: 6px; text-align: center; }
-    .forms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; direction: rtl; }
+    .name { font-size: clamp(16px, 2.3vw, 20px); font-weight: 600; margin-top: 6px; text-align: center; }
+    .forms { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 2vw, 16px); direction: rtl; }
     .box { border: 1px dashed #ddd; border-radius: 8px; padding: 8px; text-align: center; }
-    .small { font-size: 44px; }
-    .muted { color: var(--muted); font-size: 12px; margin-top: 4px; text-align: center; }
+    .small { font-size: clamp(36px, 6vw, 48px); }
+    .muted { color: var(--muted); font-size: clamp(12px, 1.8vw, 14px); margin-top: 4px; text-align: center; }
+    .prep-switcher {
+      display: flex;
+      justify-content: center;
+      margin-bottom: clamp(18px, 3vw, 30px);
+    }
+    .prep-mode-toggle {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: clamp(8px, 1.6vw, 16px);
+      padding: clamp(10px, 2vw, 18px) clamp(14px, 3vw, 28px);
+      background: linear-gradient(135deg, rgba(99,102,241,0.22), rgba(236,244,255,0.95));
+      border-radius: 999px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55), 0 18px 38px -20px rgba(37,99,235,0.45);
+      max-width: min(100%, 720px);
+    }
+    .prep-mode-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: #1d4ed8;
+      font-weight: 700;
+      font-size: clamp(14px, 2vw, 17px);
+      padding: clamp(9px, 1.5vw, 14px) clamp(16px, 2.6vw, 24px);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .prep-mode-btn:hover { background: rgba(37,99,235,0.12); color: #0f172a; }
+    .prep-mode-btn.active {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      box-shadow: 0 16px 30px -18px rgba(79,70,229,0.6);
+    }
+
+    .prep-switcher .prep-mode-toggle {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: clamp(10px, 1.8vw, 16px);
+      padding: clamp(10px, 2vw, 18px) clamp(14px, 3vw, 28px);
+      background: linear-gradient(135deg, rgba(99,102,241,0.22), rgba(236,244,255,0.95));
+      border-radius: 999px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55), 0 18px 38px -20px rgba(37,99,235,0.45);
+      max-width: min(100%, 1040px);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .prep-switcher .prep-mode-toggle::-webkit-scrollbar { display: none; }
+    .prep-switcher .prep-mode-btn { flex: 0 0 auto; white-space: nowrap; }
+    .prep-summary {
+      text-align: center;
+      font-size: clamp(20px, 2.8vw, 26px);
+      color: #475569;
+      margin-bottom: clamp(18px, 3vw, 32px);
+    }
+    .prep-container {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(18px, 3vw, 28px);
+      max-width: min(100%, 920px);
+      margin: 0 auto;
+    }
+    .quiz-shell.prep-active .card {
+      padding: clamp(28px, 5vw, 60px);
+      min-height: min(92vh, 1000px);
+    }
+    .quiz-shell.prep-active #prep-section .prep-container {
+      max-width: min(100%, 1180px);
+    }
+    .quiz-shell.prep-active #prep-section .prep-mode-toggle {
+      gap: clamp(10px, 2vw, 18px);
+      padding: clamp(12px, 2.2vw, 22px) clamp(18px, 3.2vw, 30px);
+      max-width: min(100%, 760px);
+    }
+    .quiz-shell.prep-active #prep-section .prep-mode-btn {
+      font-size: clamp(15px, 2vw, 18px);
+      padding: clamp(10px, 1.8vw, 16px) clamp(18px, 2.6vw, 24px);
+      white-space: nowrap;
+    }
+    .quiz-shell.prep-active #prep-section .prep-muted {
+      font-size: clamp(20px, 2.6vw, 26px);
+      margin-bottom: clamp(12px, 2vw, 18px);
+    }
+    .quiz-shell.prep-active #prep-section .slots {
+      gap: clamp(12px, 2vw, 18px);
+    }
+    .quiz-shell.prep-active #prep-section .slot {
+      min-width: clamp(54px, 9vw, 76px);
+      min-height: clamp(60px, 9vw, 88px);
+      font-size: clamp(34px, 6vw, 48px);
+    }
+    .quiz-shell.prep-active #prep-section .tiles {
+      gap: clamp(12px, 2vw, 18px);
+    }
+    .quiz-shell.prep-active #prep-section .tile {
+      padding: clamp(12px, 2.2vw, 22px) clamp(16px, 3vw, 28px);
+      font-size: clamp(32px, 5.8vw, 50px);
+    }
+    .quiz-shell.prep-active #prep-section .prep-actions {
+      gap: clamp(14px, 2.4vw, 20px);
+    }
+    .quiz-shell.prep-active #prep-section .prep-btn {
+      font-size: clamp(15px, 2.2vw, 18px);
+      padding: clamp(10px, 2vw, 16px) clamp(18px, 3vw, 30px);
+    }
+    .quiz-shell.prep-active #prep-section .prep-two-col {
+      gap: clamp(16px, 2.5vw, 28px);
+    }
+    .quiz-shell.prep-active #prep-section .prep-col {
+      padding: clamp(18px, 2.8vw, 26px);
+    }
+    .quiz-shell.prep-active #prep-section .pair-item {
+      font-size: clamp(20px, 2.6vw, 26px);
+      padding: clamp(10px, 2vw, 18px) clamp(14px, 2.5vw, 22px);
+    }
+    .quiz-shell.prep-active #prep-section .prep-input {
+      font-size: clamp(18px, 2.6vw, 26px);
+      padding: clamp(10px, 1.8vw, 16px);
+    }
+    .quiz-shell.prep-active #prep-section .status {
+      font-size: clamp(16px, 2.4vw, 22px);
+    }
+    .prep-rtl { direction: rtl; font-family: 'Scheherazade New', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Geeza Pro', 'Arial', sans-serif; }
+    .prep-arabic-word { font-size: clamp(44px, 8vw, 72px); text-align: center; color: #111827; text-shadow: 1px 1px 0 #dfe6e9; }
+    .prep-muted { color: var(--muted); text-align: center; font-size: clamp(18px, 2.3vw, 22px); }
+    .tiles { display: flex; flex-wrap: wrap; gap: clamp(12px, 2vw, 18px); justify-content: center; }
+    .tile { border: 3px solid #a8e6cf; background: #fff; border-radius: 18px; padding: clamp(12px, 2vw, 18px) clamp(16px, 2.8vw, 24px); font-size: clamp(30px, 5.6vw, 44px); cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease; }
+    .tile:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+    .tile.used { background: #e2e8f0; color: #64748b; border-color: #cbd5e1; cursor: not-allowed; }
+    .slots { display: flex; flex-wrap: wrap; gap: clamp(10px, 1.8vw, 16px); justify-content: center; }
+    .slot { min-width: clamp(44px, 8vw, 58px); min-height: clamp(52px, 8vw, 66px); border: 3px dashed #cbd5e1; border-radius: 14px; padding: 8px 12px; display: inline-flex; align-items: center; justify-content: center; font-size: clamp(28px, 5vw, 38px); background: #f8fafc; }
+    .slot.filled { border-style: solid; border-color: #94a3b8; background: #fff; }
+    .prep-actions { display: flex; gap: clamp(12px, 2vw, 18px); justify-content: center; flex-wrap: wrap; }
+    .prep-btn { border: none; background: linear-gradient(135deg, #38bdf8, #6366f1); color: #fff; padding: clamp(10px, 2vw, 14px) clamp(16px, 3vw, 26px); border-radius: 999px; font-weight: 700; font-size: clamp(15px, 2.2vw, 18px); cursor: pointer; box-shadow: 0 16px 28px -12px rgba(59,130,246,0.7); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .prep-btn.secondary { background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 16px 28px -12px rgba(34,197,94,0.6); }
+    .prep-two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: clamp(16px, 2.5vw, 24px); }
+    .prep-col { background: #fff; border: 1px solid #e5e7eb; border-radius: 18px; padding: clamp(18px, 2.8vw, 24px); }
+    .prep-col h3 { margin: 0 0 12px; font-size: clamp(14px, 2vw, 16px); letter-spacing: 0.06em; text-transform: uppercase; color: #64748b; }
+    .pair-item { border: 2px solid #f59e0b; background: #fff7ed; color: #92400e; border-radius: 14px; padding: clamp(10px, 2vw, 16px); font-size: clamp(20px, 2.6vw, 24px); cursor: pointer; transition: transform 0.1s ease, background 0.2s ease; }
+    .pair-item:hover { transform: translateY(-2px); }
+    .pair-item.selected { outline: 3px solid #f59e0b; }
+    .pair-item.matched { background: #dcfce7; border-color: #22c55e; color: #14532d; cursor: default; }
+    .prep-input { font-size: clamp(18px, 2.5vw, 24px); padding: clamp(10px, 2vw, 16px); border-radius: 14px; border: 3px solid #cbd5e1; width: 100%; direction: rtl; }
+    .status { text-align: center; font-weight: 700; font-size: clamp(16px, 2.4vw, 20px); }
     .reference-panel {
       position: fixed;
       inset: 0;
@@ -443,110 +622,48 @@
     }
     @media (max-width: 960px) {
       .quiz-shell { width: 100%; max-width: 100%; }
-      .quiz-shell.prep-active .card { padding: 40px 32px; min-height: auto; }
-      .quiz-shell.prep-active #prep-section .prep-summary { font-size: 24px; margin-bottom: 30px; }
-      .quiz-shell.prep-active #prep-section .prep-mode-btn { font-size: 16px; padding: 12px 22px; }
-      .quiz-shell.prep-active #prep-section .slot { min-width: 58px; min-height: 66px; font-size: 40px; }
-      .quiz-shell.prep-active #prep-section .tile { padding: 14px 20px; font-size: 40px; }
+      .quiz-shell.prep-active .card { padding: clamp(28px, 6vw, 38px); min-height: auto; }
+      .quiz-shell.prep-active #prep-section .prep-mode-toggle { gap: 12px; padding: 12px 18px; }
+      .quiz-shell.prep-active #prep-section .prep-mode-btn { font-size: 15px; padding: 10px 18px; }
+      .quiz-shell.prep-active #prep-section .prep-summary { font-size: 22px; margin-bottom: 26px; }
+      .quiz-shell.prep-active #prep-section .slot { min-width: 58px; min-height: 66px; font-size: 38px; }
+      .quiz-shell.prep-active #prep-section .tile { padding: 14px 20px; font-size: 38px; }
       .ref-card { width: min(94vw, 760px); }
     }
-    @media (max-width: 720px) {
-      header { padding: 12px 16px; }
-      h1 { font-size: 20px; }
-      main { padding: 16px 12px 60px; }
-      .card { padding: 28px 22px; border-radius: 24px; }
-      .quiz-head { flex-direction: column; align-items: stretch; }
-      .quiz-tag { width: fit-content; }
-      button.help-btn { width: 100%; justify-content: center; }
-      .quiz-controls { width: 100%; gap: 12px; }
-      .mode-toggle { max-width: 100%; gap: 10px; }
-      .difficulty-toggle { width: 100%; }
-      .difficulty-btn { flex: 1 1 120px; }
-      .mode-btn { flex: 1 1 100%; }
-      .prep-switcher { margin-bottom: 18px; }
-      .prep-mode-toggle { gap: 12px; padding: 12px 18px; }
-      .quiz-shell.prep-active { width: 100%; }
-      .quiz-shell.prep-active .card { padding: 30px 22px; min-height: auto; }
-      .quiz-shell.prep-active #prep-section .prep-summary { font-size: 22px; margin-bottom: 26px; }
-      .prep-container { max-width: 100%; }
-      .quiz-shell.prep-active #prep-section .prep-mode-btn { font-size: 15px; padding: 10px 18px; }
-      .quiz-shell.prep-active #prep-section .prep-muted { font-size: 20px; }
-      .quiz-shell.prep-active #prep-section .slot { min-width: 52px; min-height: 60px; font-size: 34px; }
-      .quiz-shell.prep-active #prep-section .tile { padding: 12px 16px; font-size: 34px; }
-      .quiz-shell.prep-active #prep-section .prep-btn { font-size: 15px; padding: 10px 20px; }
-      .arabic { font-size: 72px; }
-      .grid { grid-template-columns: 1fr; gap: 12px; max-width: 100%; }
-      .quiz-card .grid button { width: 100%; }
-      .ref-card { padding: 32px 24px; border-radius: 24px; width: min(95vw, 540px); }
-      .ref-slide { padding: 24px 20px; }
-      .ref-slider { padding: 0 36px; }
-      .ref-nav { width: 48px; height: 48px; font-size: 26px; }
-      .ref-forms { grid-template-columns: 1fr; }
+    @media (max-width: 640px) {
+      .header-bar { flex-direction: column; align-items: stretch; gap: 8px; }
+      .header-bar h1 { text-align: center; }
+      .card { padding: clamp(20px, 8vw, 28px); }
+      .quiz-head { justify-content: space-between; gap: 12px; }
+      .quiz-head .mode-strip { order: 3; flex-basis: 100%; min-width: 0; }
+      .quiz-head .help-btn { order: 2; }
+      .grid { grid-template-columns: 1fr; }
+      .mode-toggle { width: 100%; }
+      .mode-btn { flex: 1 1 calc(50% - 12px); text-align: center; }
+      .prep-mode-btn { flex: 1 1 calc(50% - 12px); text-align: center; }
+      .quiz-actions { gap: 12px; }
+      .quiz-shell.prep-active .card { padding: clamp(24px, 7vw, 32px); }
+      .quiz-shell.prep-active #prep-section .prep-container { max-width: 100%; }
+      .quiz-shell.prep-active #prep-section .prep-summary { font-size: 20px; margin-bottom: 20px; }
+      .quiz-shell.prep-active #prep-section .tile { font-size: 32px; }
+      .quiz-shell.prep-active #prep-section .slot { font-size: 30px; min-width: 48px; min-height: 56px; }
     }
     /* Top-level tabs (Letters vs. Quiz Prep) */
     .top-tabs { display: inline-flex; gap: 8px; background: rgba(15,23,42,0.04); padding: 6px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(108,92,231,0.12); }
     .top-tab { border: none; background: transparent; color: #111827; font-weight: 700; font-size: 14px; padding: 10px 16px; border-radius: 999px; cursor: pointer; transition: all 0.2s ease; }
     .top-tab:hover { background: rgba(108,92,231,0.08); }
     .top-tab.active { background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff; box-shadow: 0 10px 22px -12px rgba(108,92,231,0.5); }
-    /* Prep tab styles */
-    .prep-switcher { display: flex; justify-content: center; margin-bottom: 28px; }
-    .prep-mode-toggle { display: inline-flex; align-items: stretch; gap: 18px; padding: 14px 24px; flex-wrap: wrap; justify-content: center; background: rgba(236, 244, 255, 0.92); border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(108,92,231,0.22); }
-    .prep-mode-btn { border: none; background: transparent; color: #2563eb; font-weight: 700; font-size: 16px; padding: 12px 22px; border-radius: 999px; cursor: pointer; transition: all 0.2s ease; }
-    .prep-mode-btn:hover { background: rgba(37,99,235,0.12); }
-    .prep-mode-btn.active { background: linear-gradient(135deg, #38bdf8, #6366f1); color: #fff; box-shadow: 0 12px 24px -12px rgba(37,99,235,0.5); }
-    .prep-summary { text-align: center; font-size: 24px; color: #475569; margin-bottom: 32px; }
-    .prep-container { display: flex; flex-direction: column; gap: 28px; max-width: 920px; margin: 0 auto; }
-    .quiz-shell.prep-active .card { padding: 72px 84px; min-height: min(92vh, 1080px); }
-    .quiz-shell.prep-active #prep-section .prep-summary { font-size: 28px; margin-bottom: 36px; }
-    .quiz-shell.prep-active #prep-section .prep-container { max-width: min(94%, 1320px); }
-    .quiz-shell.prep-active #prep-section .prep-mode-toggle { gap: 20px; padding: 18px 32px; }
-    .quiz-shell.prep-active #prep-section .prep-mode-btn { font-size: 18px; padding: 14px 28px; }
-    .quiz-shell.prep-active #prep-section .prep-muted { font-size: 26px; margin-bottom: 16px; }
-    .quiz-shell.prep-active #prep-section .slots { gap: 16px; }
-    .quiz-shell.prep-active #prep-section .slot { min-width: 76px; min-height: 88px; font-size: 50px; }
-    .quiz-shell.prep-active #prep-section .tiles { gap: 16px; }
-    .quiz-shell.prep-active #prep-section .tile { padding: 18px 30px; font-size: 52px; }
-    .quiz-shell.prep-active #prep-section .prep-actions { gap: 18px; }
-    .quiz-shell.prep-active #prep-section .prep-btn { font-size: 18px; padding: 14px 30px; }
-    .quiz-shell.prep-active #prep-section .prep-two-col { gap: 28px; }
-    .quiz-shell.prep-active #prep-section .prep-col { padding: 26px; }
-    .quiz-shell.prep-active #prep-section .pair-item { font-size: 28px; padding: 16px 20px; }
-    .quiz-shell.prep-active #prep-section .prep-input { font-size: 28px; padding: 16px 20px; }
-    .quiz-shell.prep-active #prep-section .status { font-size: 22px; }
-    .prep-rtl { direction: rtl; font-family: 'Scheherazade New', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Geeza Pro', 'Arial', sans-serif; }
-    .prep-arabic-word { font-size: 72px; text-align: center; color: #111827; text-shadow: 1px 1px 0 #dfe6e9; }
-    .prep-muted { color: var(--muted); text-align: center; font-size: 22px; }
-    .tiles { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
-    .tile { border: 3px solid #a8e6cf; background: #fff; border-radius: 18px; padding: 16px 22px; font-size: 44px; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease; }
-    .tile:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
-    .tile.used { background: #e2e8f0; color: #64748b; border-color: #cbd5e1; cursor: not-allowed; }
-    .slots { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-    .slot { min-width: 48px; min-height: 60px; border: 3px dashed #cbd5e1; border-radius: 14px; padding: 8px 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 40px; background: #f8fafc; }
-    .slot.filled { border-style: solid; border-color: #94a3b8; background: #fff; }
-    .prep-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .prep-btn { border: none; background: linear-gradient(135deg, #38bdf8, #6366f1); color: #fff; padding: 12px 26px; border-radius: 999px; font-weight: 700; font-size: 18px; cursor: pointer; box-shadow: 0 16px 28px -12px rgba(59,130,246,0.7); }
-    .prep-btn.secondary { background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 16px 28px -12px rgba(34,197,94,0.6); }
-    .prep-two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
-    .prep-col { background: #fff; border: 1px solid #e5e7eb; border-radius: 18px; padding: 24px; }
-    .prep-col h3 { margin: 0 0 12px; font-size: 16px; letter-spacing: 0.06em; text-transform: uppercase; color: #64748b; }
-    .pair-item { border: 2px solid #f59e0b; background: #fff7ed; color: #92400e; border-radius: 14px; padding: 12px 18px; font-size: 24px; cursor: pointer; transition: transform 0.1s ease, background 0.2s ease; }
-    .pair-item:hover { transform: translateY(-2px); }
-    .pair-item.selected { outline: 3px solid #f59e0b; }
-    .pair-item.matched { background: #dcfce7; border-color: #22c55e; color: #14532d; cursor: default; }
-    .prep-input { font-size: 24px; padding: 12px 16px; border-radius: 14px; border: 3px solid #cbd5e1; width: 100%; direction: rtl; }
     .status { text-align: center; font-weight: 700; font-size: 20px; }
   </style>
 </head>
 <body>
 <header>
-  <div class="top-tabs" role="tablist" aria-label="Choose section">
-    <button type="button" class="top-tab active" data-tab="letters" aria-selected="true">Letters</button>
-    <button type="button" class="top-tab" data-tab="prep" aria-selected="false">Quiz Prep</button>
-  </div>
-  <h1>Arabic Letters Adventure! 🌟</h1>
-  <div class="mode-toggle" role="group" aria-label="Select game mode">
-    <button type="button" class="mode-btn active" data-mode="form-to-name" aria-pressed="true">Form → Name</button>
-    <button type="button" class="mode-btn" data-mode="name-to-form" aria-pressed="false">Name → Form</button>
+  <div class="header-bar">
+    <h1>Aaliyah's Journey ✨</h1>
+    <div class="top-tabs" role="tablist" aria-label="Choose section">
+      <button type="button" class="top-tab active" data-tab="letters" aria-selected="true">Letters</button>
+      <button type="button" class="top-tab" data-tab="prep" aria-selected="false">Quiz Prep</button>
+    </div>
   </div>
 </header>
 <main>
@@ -554,6 +671,12 @@
     <section class="card quiz-card" id="letters-section">
       <div class="quiz-head">
         <span class="quiz-tag">Question</span>
+        <div class="mode-strip">
+          <div class="mode-toggle" role="group" aria-label="Select game mode">
+            <button type="button" class="mode-btn active" data-mode="form-to-name" aria-pressed="true">Form → Name</button>
+            <button type="button" class="mode-btn" data-mode="name-to-form" aria-pressed="false">Name → Form</button>
+          </div>
+        </div>
         <button type="button" id="help" class="help-btn" aria-haspopup="dialog" aria-controls="reference-panel">Help</button>
       </div>
       <div id="quiz"></div>
@@ -566,11 +689,11 @@
     <section class="card quiz-card" id="prep-section" hidden>
       <div class="prep-switcher">
         <div class="prep-mode-toggle" role="group" aria-label="Select prep mode">
+          <button type="button" class="prep-mode-btn" data-prep="flashcards">Flashcards</button>
           <button type="button" class="prep-mode-btn active" data-prep="letter-order">Letter Order</button>
           <button type="button" class="prep-mode-btn" data-prep="phonetic-match">Phonetic Match</button>
-          <button type="button" class="prep-mode-btn" data-prep="write-it">Write It</button>
           <button type="button" class="prep-mode-btn" data-prep="definition-match">Definition Match</button>
-          <button type="button" class="prep-mode-btn" data-prep="flashcards">Flashcards</button>
+          <button type="button" class="prep-mode-btn" data-prep="write-it">Write It</button>
         </div>
       </div>
       <div class="prep-summary">Keep practicing with different games to lock the letters in! 🎯</div>
@@ -610,15 +733,15 @@ let currentTab = 'letters';
 // ===== Quiz Prep Data: Spelling words (from your PDF) =====
 // Stored exactly as provided; tatweel and diacritics are preserved
 const SPELLING_WORDS = [
-  'ٌرْـعَش',
-  'ٌّيـ ِّنُب',
-  'ٌرـیِـصَق',
-  'ٌبْـلَك',
-  'ٌطـ َّقَرُـم',
-  'ُكِـسْـمُـت',
-  'ُةَـبْـعُل',
-  'َةرُـك',
-  'َبِرْضِـمْـلا'
+  'شَعْرٌ',
+  'بُنِّيٌّ',
+  'قَصِيرٌ',
+  'كَلْبٌ',
+  'مُرَقَّطٌ',
+  'تُمْسِكُ',
+  'لُعْبَةٌ',
+  'كُرَةٌ',
+  'الْمِضْرَبُ'
 ];
 
 const SPELLING_DEFINITIONS = [
@@ -839,7 +962,7 @@ function grade(button, correct) {
     ],
     wrong: [
       "Try again! 💪",
-      "You can do it! 🌈",
+      "You can do it! 📖",
       "Keep learning! 📚",
       "Don't give up! 🌟",
       "Almost there! 🎯"
@@ -1023,6 +1146,7 @@ function initPrepOnce() {
     b.addEventListener('click', () => {
       if (prepMode === b.dataset.prep) return;
       prepMode = b.dataset.prep;
+      prepWordIndex = 0;
       document.querySelectorAll('.prep-mode-btn').forEach(x => x.classList.toggle('active', x === b));
       renderPrep();
     });
@@ -1031,6 +1155,8 @@ function initPrepOnce() {
 }
 
 function renderPrep() {
+  const toggle = document.querySelector('.prep-mode-toggle');
+  if (toggle) toggle.scrollLeft = 0;
   const root = document.getElementById('prep-container');
   if (!root) return;
   root.innerHTML = '';
