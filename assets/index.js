@@ -38681,7 +38681,7 @@ For more information, see https://radix-ui.com/primitives/docs/components/${a.do
                                                             }),
                                                             d.jsx("p", {
                                                                 className: "text-pretty",
-                                                                children: "Questions appear in order - perfect for learning the Five Pillars sequence!"
+                                                                children: "Questions will appear in order!"
                                                             })
                                                         ]
                                                     }),
@@ -38703,8 +38703,7 @@ For more information, see https://radix-ui.com/primitives/docs/components/${a.do
                                                             }),
                                                             d.jsx("p", {
                                                                 className: "text-pretty",
-                                                                children: "Questions are shuffled - test your knowledge! Hope you know the order of the F" +
-                                                                        "ive Pillars!"
+                                                                children: "Questions are shuffled!"
                                                             })
                                                         ]
                                                     })
