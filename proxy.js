@@ -57444,7 +57444,7 @@ function requireExpress () {
 var expressExports = requireExpress();
 var express = /*@__PURE__*/getDefaultExportFromCjs(expressExports);
 
-const VERSION = "a052aaad347bbe89ebab9dbb796d4d634a33f3b8";
+const VERSION = "e9cd69a928c46a0fa481e8e64c4fcdb2037ca4cd";
 console.log(`Spark Proxy version: ${VERSION}`);
 const app = express();
 app.disable('etag');
